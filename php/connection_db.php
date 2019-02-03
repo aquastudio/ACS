@@ -1,9 +1,9 @@
 <?php
 
-    $host = "";
-    $user = "";
+    $host = "127.0.0.1";
+    $user = "root";
     $pass = "";
-    $base = "";
+    $base = "aqua_communication_system";
 
     $db = new mysqli($host, $user, $pass);
 
@@ -24,6 +24,7 @@
 
     $db->query("CREATE TABLE IF NOT EXISTS messages (
         id BIGINT UNSIGNED AUTO_INCREMENT NOT NULL,
+        id_author BIGINT UNSIGNED NOT NULL,
         text VARCHAR(280) NOT NULL,
         PRIMARY KEY(id)
     )");

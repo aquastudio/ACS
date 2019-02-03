@@ -87,6 +87,7 @@
     <!-- Importation de Less : -->
     <script type="text/javascript" src="ui/plugins/Less/less.min.js"></script>
     <script type="text/javascript" src="ui/plugins/jQuery/jQuery.min.js"></script>
+    <script type="text/javascript" src="ui/js/main.js"></script>
 </head>
 <body>
     <br/><br/><br/><br/>
