@@ -1,6 +1,7 @@
 <?php
 
     session_start();
+    include_once "../php/main_function.php";
 
     if(!isset($_SESSION["id"]) OR empty($_SESSION["id"])) {
         header("Location: ../index.php");
@@ -16,18 +17,6 @@
             $db->close();
             header("Location: ../public/index.php");
 
-        } else {
-            $id = $_SESSION["id"];
-            include_once "../php/connection_db.php";
-
-            if(isset($_POST["S_submit"])) {
-
-                $S_text = strip_tags($_POST["S_text"], "<i></i><b></b><u></u><s></s><a></a>");
-                
-                if(!empty($S_text)) {
-                    $db->query("INSERT INTO messages (id_author, text) VALUES ($id, '$S_text')");
-                }
-            }
         }
     }
 
@@ -53,7 +42,7 @@
     </div>
     <form action="" method="POST" name="S_form" id="S_form">
         <label for="S_text">
-            <textarea name="S_text" id="S_text" placholder="Aa"></textarea>
+            <textarea name="S_text" id="S_text" placeholder="Aa" onload="this.focus();"></textarea>
         </label><br>
         <input type="submit" name="S_submit" id="S_submit" value="Envoyer"/>
         <br/>
@@ -66,12 +55,11 @@
         ?>
     </form>
     <script type="text/javascript">
-        $("#messages").load("../php/message.php");
+        $("#messages").load("../php/show_message.php");
         setInterval(function() {
-            $("#messages").load("../php/message.php");
+            $("#messages").load("../php/show_message.php");
         }, 3000);
-        
     </script>  
-    <!-- <script type="text/javascript" src="../ui/js/main.js"></script> -->
+    <script type="text/javascript" src="../ui/js/main.js"></script>
 </body>
 </html>

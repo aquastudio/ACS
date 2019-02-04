@@ -1,4 +1,8 @@
 <?php
+
+    session_start();
+    include_once "../php/main_function.php";
+
     if(!isset($_SESSION["id"]) OR empty($_SESSION["id"])) {
         header("Location: ../index.php");
     } else {
@@ -30,7 +34,7 @@
     <script type="text/javascript" src="../ui/js/main.js"></script>
 </head>
 <body>
-    Ce site est en construction, certaine fonction ne sont pas encore opérationnelles...
+    Ce site est en construction, certaines fonctions ne sont pas encore opérationnelles...<br/>
     <a href="../php/logout.php">Se Déconnecter</a>
 </body>
 </html>
