@@ -1,6 +1,7 @@
 <?php 
+  include_once "included_scripts/main_function.php";
   session_start();
   $_SESSION = array();
   session_destroy();
-  header("Location: ../index.php");
+  redirect("../index.php");
 ?>

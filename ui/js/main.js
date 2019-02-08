@@ -14,13 +14,19 @@ document.getElementById("S_form").addEventListener("submit", function(e) {
             }
         };
 
-        xhr.open("POST", "../php/send_message.php", true);
+        xhr.open("POST", "../php/included_scripts/send_message.php", true);
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.send("msg="+msg);
+        xhr.send("msg=" + msg);
     } else {
 
     }
-    $("#messages").load("../php/show_message.php");
+    $("#messages").load("../php/included_scripts/show_message.php");
     document.getElementById("S_text").value = "";
     return false;
+});
+
+document.getElementById("S_text").addEventListener("keydown", function(e) {
+    if(e.keyCode == 49) { // Touche == "&"
+        e.preventDefault();
+    }
 });

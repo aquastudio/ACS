@@ -1,10 +1,10 @@
 <?php
 
     session_start();
-    include_once "php/main_function.php";
+    include_once "php/included_scripts/main_function.php";
 
     if(isset($_SESSION["id"])) {
-        include_once "php/connection_db.php";
+        include_once "php/included_scripts/connection_db.php";
 
         $id = $_SESSION["id"];
         $result = $db->query("SELECT * FROM members WHERE id = $id");
@@ -26,62 +26,16 @@
     $L_message = "<a href='?a=signup'>Pas encore membre ?</a>";
     $R_message = "<a href='?a=login'>J'ai déjà un compte</a>";
 
-    if(isset($_POST["L_submit"])) {
-        $L_name = htmlspecialchars(ucfirst($_POST["L_name"]));
-        $L_pass = $_POST["L_pass"];
-
-        if(!empty($L_name) AND !empty($L_pass)) {
-
-            if(strlen($L_name) >= 3 AND strlen($L_name) <= 32) {
-
-                if(strlen($L_pass) >= 3 AND strlen($L_pass) <= 32) {
-
-                    include_once "php/connection_db.php";
-
-                    $L_hpass = sha1($L_pass);
-                    $result = $db->query("SELECT * FROM members WHERE name = '$L_name' AND password = '$L_hpass'");
-
-                    $nb_lines_affected = $db->affected_rows;
-
-                    if($nb_lines_affected == 1) {
-
-                        $userinfo = $result->fetch_assoc();
-                        $_SESSION["id"] = $userinfo["id"];
-                        
-                        if($userinfo["grade"] == "Admin") {
-
-                            $db->close();
-                            redirect("admin/index.php");
-
-                        } else {
-                            $db->close();
-                            redirect("public/index.php");
-                        }
-                    } else {
-                        $db->close();
-                        $L_message =  "Nom ou Mot de Passe incorrect";
-                    }
-
-                } else {
-                    $L_message = "Mot de pass trop court ou trop long";
-                }
-            } else {
-                $L_message = "Nom trop court ou trop long";
-            }
-        } else {
-            $L_message = "Tous les champs doivent être compétés";
-        }
-    }
 
     if(isset($_POST["R_submit"])) {
 
-        $R_name = htmlspecialchars(ucfirst($_POST["R_name"]));
+        $R_name = asciispecialchars(ucfirst($_POST["R_name"]));
         $R_pass = $_POST["R_pass"];
         $R_vpass = $_POST["R_vpass"];
 
         if(!empty($R_name) AND !empty($R_pass) AND !empty($R_vpass)) {
             
-            if(strlen($R_name) >= 3 AND strlen($R_name) <= 32) {
+            if(strlen($_POST["R_name"]) >= 3 AND strlen($_POST["R_name"]) <= 32) {
 
                 if($R_pass == $R_vpass) {
 
@@ -89,7 +43,7 @@
 
                     if(strlen($R_pass) >= 3 AND strlen($R_pass) <= 32) {
 
-                        include "php/connection_db.php";
+                        include "php/included_scripts/connection_db.php";
 
                         $R_hpass = sha1($R_pass);
                         
@@ -130,9 +84,53 @@
         }
     }
 
-    // include_once "php/connection_db.php";
+    
+    if(isset($_POST["L_submit"])) {
+        $L_name = asciispecialchars(ucfirst($_POST["L_name"]));
+        $L_pass = $_POST["L_pass"];
 
-    $psw = sha1("yh9vnrz3");
+        if(!empty($L_name) AND !empty($L_pass)) {
+
+            if(strlen($_POST["L_name"]) >= 3 AND strlen($_POST["L_name"]) <= 32) {
+
+                if(strlen($L_pass) >= 3 AND strlen($L_pass) <= 32) {
+
+                    include_once "php/included_scripts/connection_db.php";
+
+                    $L_hpass = sha1($L_pass);
+                    $result = $db->query("SELECT * FROM members WHERE name = '$L_name' AND password = '$L_hpass'");
+
+                    $nb_lines_affected = $db->affected_rows;
+
+                    if($nb_lines_affected == 1) {
+
+                        $userinfo = $result->fetch_assoc();
+                        $_SESSION["id"] = $userinfo["id"];
+                        
+                        if($userinfo["grade"] == "Admin") {
+
+                            $db->close();
+                            redirect("admin/index.php");
+
+                        } else {
+                            $db->close();
+                            redirect("public/index.php");
+                        }
+                    } else {
+                        $db->close();
+                        $L_message =  "Nom ou Mot de Passe incorrect";
+                    }
+
+                } else {
+                    $L_message = "Mot de pass trop court ou trop long";
+                }
+            } else {
+                $L_message = "Nom trop court ou trop long";
+            }
+        } else {
+            $L_message = "Tous les champs doivent être compétés";
+        }
+    }
 
 ?>
 <!DOCTYPE html>
@@ -141,21 +139,26 @@
     <meta charset="UTF-8"/>
     <title>Aqua Communication System</title>
 
+    <!-- Importation less/css -->
     <link rel="stylesheet/less" href="ui/css/layout.less"/>
 
     <!-- Importation de Less : -->
     <script type="text/javascript" src="ui/plugins/Less/less.min.js"></script>
+    <!-- Importation de jQuery -->
     <script type="text/javascript" src="ui/plugins/jQuery/jQuery.min.js"></script>
+
+    <!-- Importation javascript -->
     <script type="text/javascript" src="ui/js/main.js"></script>
 </head>
 <body>
     <br/><br/><br/><br/>
     <?php
-    if(isset($_GET["a"])) {
-        $action = strval($_GET["a"]);
-    } else {
-        $action = "login";
-    }
+    
+        if(isset($_GET["a"])) {
+            $action = strval($_GET["a"]);
+        } else {
+            $action = "home";
+        }
 
         switch ($action) {
             case "signup":
@@ -185,7 +188,7 @@
                 <?php
                 break;
             
-            default:
+            case "login":
                 ?>
                 <h2> --- Connexion : --- </h2>
 
@@ -205,6 +208,16 @@
                     </div>
                     <input type="submit" name="L_submit" id="L_submit">
                 </form>
+                <?php
+                break;
+            default:
+                ?>
+                <header>
+                    <button><a href="?a=login">Se Connecter</a></button>
+                    <button><a href="?a=signup">S'inscrire</a></button>
+                </header>
+                <h1>Accueil</h1>
+                <h3>Bienvenue sur Aqua...
                 <?php
                 break;
         }

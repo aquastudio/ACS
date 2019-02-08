@@ -29,5 +29,11 @@
         PRIMARY KEY(id)
     )");
 
-
+    $db->query("CREATE TABLE IF NOT EXISTS online (
+        id BIGINT UNSIGNED AUTO_INCREMENT NOT NULL,
+        ip VARCHAR(250) NOT NULL,
+        id_actif BIGINT UNSIGNED NOT NULL,
+        time BIGINT UNSIGNED NOT NULL,
+        PRIMARY KEY(id)
+    )");
 ?>

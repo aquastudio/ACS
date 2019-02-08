@@ -1,12 +1,12 @@
 <?php
     session_start();
+    include_once "main_function.php";
 
     if(isset($_SESSION["id"])) {
-        include_once "../php/connection_db.php";
+        include_once "connection_db.php";
 
         $id = $_SESSION["id"];
-
-        $S_text = strip_tags($_POST["msg"], "<i></i><b></b><u></u><s></s><a></a>");
+        $S_text = asciispecialchars(strip_tags($_POST["msg"], "<i></i><b></b><u></u><s></s><a></a>"), true);
         
         if(!empty($S_text)) {
             $db->query("INSERT INTO messages (id_author, text) VALUES ($id, '$S_text')");
