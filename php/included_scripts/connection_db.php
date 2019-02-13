@@ -36,4 +36,14 @@
         time BIGINT UNSIGNED NOT NULL,
         PRIMARY KEY(id)
     )");
+
+    $db->query("CREATE TABLE IF NOT EXISTS checklist (
+        id BIGINT UNSIGNED AUTO_INCREMENT NOT NULL,
+        id_author BIGINT UNSIGNED NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        delegate TEXT NOT NULL,
+        status ENUM('A faire', 'En attente', 'Fait') NOT NULL DEFAULT 'A faire',
+        time BIGINT UNSIGNED NULL,
+        PRIMARY KEY(id)
+    )");
 ?>

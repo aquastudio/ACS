@@ -4,7 +4,7 @@
     include_once "../php/included_scripts/main_function.php";
 
     if(!isset($_SESSION["id"]) OR empty($_SESSION["id"])) {
-        header("Location: ../index.php");
+        redirect("../index.php");
     } else {
         include_once "../php/included_scripts/connection_db.php";
 
@@ -12,12 +12,6 @@
         $result = $db->query("SELECT * FROM members WHERE id = $id");
         $userinfo = $result->fetch_assoc();
 
-        if ($userinfo["grade"] == "Admin") {
-            
-            $db->close();
-            header("Location: ../admin/index.php");
-
-        }
     }
 
     $UP_message = "<br/>";
@@ -174,7 +168,14 @@
     Ce site est en construction, certaines fonctions ne sont pas encore opérationnelles...<br/>
     <?php echo $userinfo["name"]; ?>
             <a href="../php/logout.php">Se Déconnecter</a>
-            <a href="?a=update">Mettre à jour mes données</a>
+            <a href="<?php echo $_SERVER["PHP_SELF"]; ?>?a=update">Mettre à jour mes données</a>
+            <?php
+                if($userinfo["grade"] == "Admin") { ?>
+            <button><a href="../admin/index.php">Accèder mode Administrateur</a></button>
+                <?php
+                }
+            
+            ?>
 
             <?php
             break;
