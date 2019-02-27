@@ -5,7 +5,47 @@ body {
     color: #afb0b2;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
+    #mainTable {
+        width: 100%;
+        border: none;
 
+        td {
+            width: 50%;
+
+            td {
+                width: auto;
+            }
+        }
+        .actifPoint {
+            color: #0bb321;
+            margin-left: -7px
+        }
+    }
+    #messages {
+        position: relative;
+        margin: 5px;
+        padding: 5px;
+        height: 300px;
+        overflow-y: scroll;
+        background-color: #36393f;
+        box-shadow: inset 1px 1px 5px #000;
+
+            table {
+                border: none;
+
+                tr {
+                    border: none;
+                    border-bottom: 1px solid #5c6069;
+
+                    td {
+                        border: none;
+                        padding: 3px;
+                    }
+                }
+            }
+
+            // width: 100%;
+    }
     #L_form,
     #R_form,
     #UP_form,
@@ -31,18 +71,6 @@ body {
 
             input {
                 display: inline;
-            }
-        }
-    }
-
-    table {
-        border: 1px solid #afb0b2;
-
-        tr, th {
-            border: 1px solid #afb0b2;
-
-            td {                
-                border: 1px solid #afb0b2;
             }
         }
     }

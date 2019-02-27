@@ -1,33 +1,19 @@
 <?php
 
     session_start();
-    include_once "php/included_scripts/main_function.php";
+    require_once "php/included_scripts/main_function.php";
 
     if(isset($_SESSION["id"])) {
-        include_once "php/included_scripts/connection_db.php";
-
-        $id = $_SESSION["id"];
-        $result = $db->query("SELECT * FROM members WHERE id = $id");
-        $userinfo = $result->fetch_assoc();
-        $db->close();
         
-        if($userinfo["grade"] == "Admin") {
-
-            redirect("admin/index.php");
-
-        } elseif ($userinfo["grade"] == "User" OR $userinfo["grade"] == "Collaborater") {
-
-            redirect("public/index.php");
-        } else {
-            redirect("php/logout.php");
-        }
+        redirect("public/index.php");
     }
 
-    $L_message = "<a href='?a=signup'>Pas encore membre ?</a>";
-    $R_message = "<a href='?a=login'>J'ai déjà un compte</a>";
+
+    $L_message = "<a href='?p=signup'>Pas encore membre ?</a>";
+    $R_message = "<a href='?p=login'>J'ai déjà un compte</a>";
 
 
-    if(isset($_POST["R_submit"])) {
+    if(isset($_POST["R_submit"]) AND isset($_POST["R_pass"]) AND isset($_POST["R_vpass"])) {
 
         $R_name = asciispecialchars(ucfirst($_POST["R_name"]));
         $R_pass = $_POST["R_pass"];
@@ -41,7 +27,7 @@
 
                     unset($R_vpass);
 
-                    if(strlen($R_pass) >= 3 AND strlen($R_pass) <= 32) {
+                    if(strlen($R_pass) >= 8 AND strlen($R_pass) <= 32) {
 
                         include "php/included_scripts/connection_db.php";
 
@@ -56,11 +42,7 @@
                             $userinfo = $res->fetch_assoc();
                             $_SESSION["id"] = $userinfo["id"];
 
-                            if($userinfo["grade"] == "Admin") {
-                                redirect("admin/index.php");
-                            } elseif ($userinfo["grade"] == "User" OR $userinfo["grade"] == "Collaborater") {
-                                redirect("public/index.php");
-                            }
+                            redirect("public/index.php");
 
                         } else {
                             $R_message = "Le nom ou le mot de passe incorrecte";
@@ -68,7 +50,7 @@
                         $db->close();
 
                     } else {
-                        $R_message = "Les mots de passe doivent être compris entre 3 et 32 caractères";
+                        $R_message = "Les mots de passe doivent être compris entre 8 et 32 caractères";
                     }
 
                 } else {
@@ -85,7 +67,7 @@
     }
 
     
-    if(isset($_POST["L_submit"])) {
+    if(isset($_POST["L_submit"]) AND isset($_POST["L_name"]) AND isset($_POST["L_pass"])) {
         $L_name = asciispecialchars(ucfirst($_POST["L_name"]));
         $L_pass = $_POST["L_pass"];
 
@@ -93,7 +75,7 @@
 
             if(strlen($_POST["L_name"]) >= 3 AND strlen($_POST["L_name"]) <= 32) {
 
-                if(strlen($L_pass) >= 3 AND strlen($L_pass) <= 32) {
+                if(strlen($L_pass) >= 8 AND strlen($L_pass) <= 32) {
 
                     include_once "php/included_scripts/connection_db.php";
 
@@ -107,25 +89,19 @@
                         $userinfo = $result->fetch_assoc();
                         $_SESSION["id"] = $userinfo["id"];
                         
-                        if($userinfo["grade"] == "Admin") {
+                        $db->close();
+                        redirect("public/index.php");
 
-                            $db->close();
-                            redirect("admin/index.php");
-
-                        } else {
-                            $db->close();
-                            redirect("public/index.php");
-                        }
                     } else {
                         $db->close();
                         $L_message =  "Nom ou Mot de Passe incorrect";
                     }
 
                 } else {
-                    $L_message = "Mot de pass trop court ou trop long";
+                    $L_message = "Mot de pass trop court ou trop long (entre 8 te 32 caractères)";
                 }
             } else {
-                $L_message = "Nom trop court ou trop long";
+                $L_message = "Nom trop court ou trop long (entre 3 te 32 caractères)";
             }
         } else {
             $L_message = "Tous les champs doivent être compétés";
@@ -154,13 +130,13 @@
     <br/><br/><br/><br/>
     <?php
     
-        if(isset($_GET["a"])) {
-            $action = strval($_GET["a"]);
+        if(isset($_GET["p"])) {
+            $page = strval($_GET["p"]);
         } else {
-            $action = "home";
+            $page = "home";
         }
 
-        switch ($action) {
+        switch ($page) {
             case "signup":
                 ?>
                 <h2> --- Inscription : --- </h2>
@@ -213,8 +189,8 @@
             default:
                 ?>
                 <header>
-                    <button><a href="?a=login">Se Connecter</a></button>
-                    <button><a href="?a=signup">S'inscrire</a></button>
+                    <button><a href="<?php echo $_SERVER["PHP_SELF"]; ?>?p=login">Se Connecter</a></button>
+                    <button><a href="<?php echo $_SERVER["PHP_SELF"]; ?>?p=signup">S'inscrire</a></button>
                 </header>
                 <h1>Accueil</h1>
                 <h3>Bienvenue sur Aqua...
@@ -222,5 +198,7 @@
                 break;
         }
     ?>
+    <script type="text/javascript" src="ui/js/main.js"></script>
+    <script type="text/javascript" src="ui/js/main_function.js"></script>
 </body>
 </html>

@@ -1,0 +1,178 @@
+<?php
+/*
+définition :
+    gpage de test
+*/
+?>  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+</head>
+<body>
+    <style>
+        body {
+            background-color: #292929;
+            padding: 0; margin: 0;
+        }
+        /* textarea#text {
+            display: none;
+            position: absolute;
+            opacity: 0;
+            width: 0px;
+            height: 0px;
+        } */
+        #writer {
+            width: inherit;
+            height: 50px;
+            margin: 10px;
+            max-height: 150px;
+            overflow: scroll;
+            color: #FFF;
+            font-size: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: rgb(75, 75, 75);
+            box-shadow: inset 1px 1px 5px #000;
+        }
+
+    </style>
+
+    <form action="" method="GET" id="send_form">
+        <label for="text">
+                <textarea name="text" id="text" cols="0" rows="0"></textarea>
+                <div id="writer"></div>
+        </label>        
+    </form>
+
+    <script>
+        var form = document.querySelector("form#send_form");
+        var tarea = document.querySelector("textarea#text");
+        var writeArea = document.querySelector("div#writer");
+
+        tarea.focus();
+
+        tarea.addEventListener("keydown", function(e) {
+            var letter;
+            console.log(e.keyCode);
+
+            if(!e.ctrlKey && !e.altKey) {
+                switch (e.keyCode) {
+                    case 8:
+                        // BackSpace
+                        write("remove");
+                        break;
+                    case 9:
+                        // Tab
+                        e.preventDefault();
+                        break;
+
+                    case 13:
+                        // Enter
+                        form.submit();
+                        tarea.value = "";
+                        break;
+                    case 27:
+                        // Escape :
+                        tarea.blur();
+                        break;
+                    default:
+                        writeArea.innerHTML += e.key;
+                        break;
+                }
+            } else if(e.ctrlKey && !e.altKey) {
+                switch (e.keyCode) {
+                    case 32:
+                        // ctrl + Space :
+                        writeArea.innerHTML += "<br/><hr/><br/>";
+                        break;
+                
+                    default:
+                        break;
+                }
+            } else if(!e.ctrlKey && e.altKey) {
+                switch (e.keyCode) {
+                    case 13:
+                        // writeArea.innerHTML += "<br/>";
+                        write("add", "<br/>");
+                        
+                        writeArea.style.height = writeArea.clientHeight + 50 + "px  ";
+                        break;
+                
+                    default:
+                        break;
+                }
+            }
+
+
+            
+
+            // console.log(e);
+        });
+
+    // Raccourcis claviers
+
+    var keys = {};
+    tarea.addEventListener("focus", function (e2) {
+        onkeydown = onkeyup = function (e) {
+            e = e || event;
+            e.which = e.which || e.keyCode;
+            keys[e.which] = e.type === 'keydown';
+            if (keys[17] && keys[18] && keys[69]) {
+                // Ctrl + Alt + E
+            } else if (keys[17] && keys[16] && keys[69]) {
+                // Ctrl + Shift + E
+            } else if(keys[17] && keys[86]){
+                // Ctrl + V
+                writeArea.innerHTML = tarea.value;
+            }
+        }
+        
+    });
+    function write(mode="add", str="") {
+        if(mode && typeof str == "string" && typeof mode == "string") {
+            var tags = ["<br/>", "<hr/>"];
+            var text = writeArea.innerHTML.replace(tags, " ");
+            switch (mode) {
+                case "remove":
+                    text = writeArea.innerHTML.split("");
+                    text.pop();
+                    writeArea.innerHTML = text.join("");
+                    break;
+            
+                default:
+                    writeArea.innerHTML += str;
+                    break;
+            }
+        } else {
+            return false;
+        }
+    }
+        
+        
+    </script>
+
+    <!-- <audio id="audio" autoplay="autoplay"></audio> -->
+    <!-- <video id="video" autoplay="autoplay"></video> -->
+ 
+    <!--
+    <script>
+        window.addEventListener("load", function(e) {
+            var contraints = {
+                audio: false,
+                video: true
+            };
+            navigator.mediaDevices.getUserMedia(contraints).then(function(mediaStream) {
+                var video = document.getElementById("video");
+                video.srcObject = mediaStream;
+                video.play();
+                console.log(mediaStream);
+            }).catch(function(error) {
+                console.log(error.message);
+            });
+        });
+    </script>
+    -->
+    <script src="../ui/js/main_function.js"></script>
+</body>
+</html>
